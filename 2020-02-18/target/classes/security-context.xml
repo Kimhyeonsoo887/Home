@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 주의 : security => sec로 수정 -->
+	<!-- 정적 리소스 파일에는 보안 설정을 하지 않음 -->	
+	<sec:http auto-config = "true" use-expressions= "true" create-session = "never">
+		
+		<!-- 관리자 영역 설정 -->
+		<sec:intercept-url pattern = "/**.adm" access = "hasRole('ROLE_ADMIN')"/>
+		
+		<!-- 권한에 관계없이 접속 가능한 영역(guest도 접속 가능) -->
+		<sec:intercept-url pattern = "/**.all" access = "permitAll"/>
+		
+		<!-- 로그인한 사용자 영역  -->
+		<sec:intercept-url pattern = "/**.cust" access = "hasAnyRole('ROLE_ADMIN', 'ROLE_USER')"/>
+		
+		<!-- 로그인 폼 -->
+		<!-- username-parameter = "컬럼명" password-parameter = "컬럼명" -->
+		<sec:form-login login-page = "/login.all"
+					login-processing-url = "/loginPro.cust"
+					authentication-success-handler-ref = "userLoginSuccessHandler"
+					authentication-failure-handler-ref = "userLoginFailureHandler"
+					username-parameter = "member_id" password-parameter = "member_pw" />
+			
+		
+		<sec:session-management>
+			<!-- max-sessions = "1" : 같은 브라우저 여러창에서 동시접속 막기
+				 expired-url = "/user/login.do" : 세션 만료시 이동할 주소
+				 error-if-maximum-exceeded = "true" : 최대 세션 초과시 에러 옵션
+			 -->
+			<sec:concurrency-control max-sessions = "2"
+				expired-url = "/login.all"
+				error-if-maximum-exceeded = "true"
+			/>
+		</sec:session-management>
+		
+		<!-- 접근 권한이 없는 경우의 코드 -->
+		<sec:access-denied-handler ref="userDeniedHandler" />
+	</sec:http>
+	
+	<bean id = "userLoginSuccessHandler" class = "spring.mvc.bridge.service.UserLoginSuccessHandler" >
+		<constructor-arg name = "sqlSession" ref = "sqlSession" />
+	</bean>
+	<bean id = "userLoginFailureHandler" class = "spring.mvc.bridge.service.UserLoginFailureHandler" >
+		<constructor-arg name = "sqlSession" ref = "sqlSession" />
+		<constructor-arg name = "passwordEncoder" ref = "bcryptPasswordEncoder" />
+	</bean>
+	
+	<bean id = "userDeniedHandler" class = "spring.mvc.bridge.service.UserDeniedHandler" />
+	
+	<!-- 로그인 인증을 처리하는 빈 -->
+	<!-- 주의 : UserAuthenticationService 작성하면 에러 사라짐 -->	
+	
+	<bean id = "userService" class = "spring.mvc.bridge.service.UserAuthenticationService">
+		<constructor-arg name = "sqlSession" ref = "sqlSession" />
+	</bean>
+	
+	<!-- 비밀번호 암호화를 빈 -->
+	<bean id = "bcryptPasswordEncoder" class = "org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>	
+	
+
+</beans>
