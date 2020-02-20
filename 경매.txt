@@ -1,0 +1,23 @@
+function getPrice(){
+	if(loopSendKeyword ==false) return false;
+	var auc_no = document.auctionForm.auc_no.value;
+	var parms = "auc_no="+auc_no;
+
+	sendRequest(result_callback, "AuctionNowPrice", "GET", parms);
+	setTimeout("getPrice()",500); //실시간 제일 중요한 개념
+
+}
+fuction result_callback(){
+	var nowPrice=document.getElementById("nowPrice");
+	if(httpRequest.readyState==4){
+		if(httpRequest.status==200){
+			...
+			if(data!=null){
+				nPrice=data;
+				checkFirst=true;
+				nowPrice.innerHTML=nPrice;
+			}
+			...
+		}
+	}
+}
