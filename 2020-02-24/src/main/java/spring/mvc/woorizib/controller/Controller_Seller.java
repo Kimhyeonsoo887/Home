@@ -42,13 +42,13 @@ private static final Logger logger = LoggerFactory.getLogger(Controller_Seller.c
 		return "seller/seller_sale";
 	}
 	
-	//셀러 매물등록 
-	@RequestMapping(value="/seller_sale_Pro.sel", method=RequestMethod.POST)
+	//셀러 매물등록 Pro
+	@RequestMapping(value="/sellerSalePro.sel", method=RequestMethod.POST)
 	public String seller_sale_Pro(MultipartHttpServletRequest req, Model model) {
 		
 		logger.info("seller_sale_Pro");
 		
-		
+		serviceSeller.sellerSalePro(req, model);
 		return "seller/seller_sale_Pro";
 	}
 	

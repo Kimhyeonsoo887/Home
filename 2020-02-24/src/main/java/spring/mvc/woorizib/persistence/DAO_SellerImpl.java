@@ -26,13 +26,18 @@ public class DAO_SellerImpl implements DAO_Seller {
 		return sqlSession.insert("spring.mvc.woorizib.persistence.DAO_Seller.signupSeller", vo);
 	}
 
+	//매물등록
 	@Override
-	public int seller_sale_Pro(VO_Property vo) {
+	public int sellerSalePro(VO_Property vo) {
 		
-		return sqlSession.insert("spring.mvc.woorizib.persistence.DAO_Seller.seller_sale_Pro",vo);
+		return sqlSession.insert("spring.mvc.woorizib.persistence.DAO_Seller.sellerSalePro",vo);
 	}
+//
+//	//매물등록 (이미지)
+//	@Override
+//	public int seller_sale_Pro_Images(VO_Property vo) {
+//		return 0;
+//	}
 
-	
-	
 
 }

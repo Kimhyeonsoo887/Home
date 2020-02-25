@@ -10,5 +10,5 @@ public interface Service_Seller {
 	void signupSeller(MultipartHttpServletRequest req, Model model);
 	
 	
-	void seller_sale_Pro(MultipartHttpServletRequest req, Model model);
+	void sellerSalePro(MultipartHttpServletRequest req, Model model);
 }

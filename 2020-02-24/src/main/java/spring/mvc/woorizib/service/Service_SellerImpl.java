@@ -73,10 +73,11 @@ public class Service_SellerImpl implements Service_Seller{
 	}
 
 	@Override
-	public void seller_sale_Pro(MultipartHttpServletRequest req, Model model) {
+	public void sellerSalePro(MultipartHttpServletRequest req, Model model) {
 
 		
 		int insertCnt = 0;
+		
 		
 		String prp_accessibility = req.getParameter("prp_accessibility");
 		
@@ -152,78 +153,85 @@ public class Service_SellerImpl implements Service_Seller{
 		vo.setPrp_elevator(prp_elevator);
 		vo.setPrp_parking(prp_parking);
 		
+		System.out.println(vo.getPrp_parking());
+//		
+		//셀러 매물등록
+		insertCnt = daoSeller.sellerSalePro(vo);
+//		
+//		model.addAttribute("insertCnt",insertCnt);
 		
-		insertCnt = daoSeller.seller_sale_Pro(vo);
-		
-		
-		MultipartFile file1 = req.getFile("picTitle");
-		MultipartFile file2 = req.getFile("pic1");
-		MultipartFile file3 = req.getFile("pic2");
-		MultipartFile file4 = req.getFile("pic3");
-		MultipartFile file5 = req.getFile("pic4");
-		MultipartFile file6 = req.getFile("pic5");
-		
-		String saveDir = req.getRealPath("/resources/images/"); // 저장
-																// 경로(C:\Dev\workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\SPRING_BMS_Project\resources\images\)
-
-		String realDir = "D:\\images"; // 저장 경로
-
-		try {
-			file1.transferTo(new File(saveDir + file1.getOriginalFilename()));
-			file2.transferTo(new File(saveDir + file2.getOriginalFilename()));
-			file3.transferTo(new File(saveDir + file3.getOriginalFilename()));
-			file4.transferTo(new File(saveDir + file4.getOriginalFilename()));
-			file5.transferTo(new File(saveDir + file5.getOriginalFilename()));
-			file6.transferTo(new File(saveDir + file6.getOriginalFilename()));
-			
-			FileInputStream fis1 = new FileInputStream(saveDir + file1.getOriginalFilename());
-			FileOutputStream fos1 = new FileOutputStream(realDir + file1.getOriginalFilename());
-			FileInputStream fis2 = new FileInputStream(saveDir + file2.getOriginalFilename());
-			FileOutputStream fos2 = new FileOutputStream(realDir + file2.getOriginalFilename());
-			FileInputStream fis3 = new FileInputStream(saveDir + file3.getOriginalFilename());
-			FileOutputStream fos3 = new FileOutputStream(realDir + file3.getOriginalFilename());
-			FileInputStream fis4 = new FileInputStream(saveDir + file4.getOriginalFilename());
-			FileOutputStream fos4 = new FileOutputStream(realDir + file4.getOriginalFilename());
-			FileInputStream fis5 = new FileInputStream(saveDir + file5.getOriginalFilename());
-			FileOutputStream fos5 = new FileOutputStream(realDir + file5.getOriginalFilename());
-
-			int data1 = 0;
-			int data2 = 0;
-			int data3 = 0;
-			int data4 = 0;
-			int data5 = 0;
-
-			while ((data1 = fis1.read()) != -1) {
-				fos1.write(data1);
-			}
-			fis1.close();
-			fos1.close();
-
-			while ((data2 = fis2.read()) != -1) {
-				fos2.write(data2);
-			}
-			fis2.close();
-			fos2.close();
-			while ((data3 = fis3.read()) != -1) {
-				fos3.write(data3);
-			}
-			fis3.close();
-			fos3.close();
-			while ((data4 = fis4.read()) != -1) {
-				fos4.write(data4);
-			}
-			fis4.close();
-			fos4.close();
-			while ((data5 = fis5.read()) != -1) {
-				fos5.write(data5);
-			}
-			fis5.close();
-			fos5.close();
-			
-			
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
+//		MultipartFile file1 = req.getFile("picTitle");
+//		MultipartFile file2 = req.getFile("pic1");
+//		MultipartFile file3 = req.getFile("pic2");
+//		MultipartFile file4 = req.getFile("pic3");
+//		MultipartFile file5 = req.getFile("pic4");
+//		MultipartFile file6 = req.getFile("pic5");
+//		
+//		String saveDir = req.getRealPath("/resources/images/"); // 저장
+//																// 경로(C:\Dev\workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\SPRING_BMS_Project\resources\images\)
+//
+//		String realDir = "D:\\images"; // 저장 경로
+//
+//		try {
+//			file1.transferTo(new File(saveDir + file1.getOriginalFilename()));
+//			file2.transferTo(new File(saveDir + file2.getOriginalFilename()));
+//			file3.transferTo(new File(saveDir + file3.getOriginalFilename()));
+//			file4.transferTo(new File(saveDir + file4.getOriginalFilename()));
+//			file5.transferTo(new File(saveDir + file5.getOriginalFilename()));
+//			file6.transferTo(new File(saveDir + file6.getOriginalFilename()));
+//			
+//			FileInputStream fis1 = new FileInputStream(saveDir + file1.getOriginalFilename());
+//			FileOutputStream fos1 = new FileOutputStream(realDir + file1.getOriginalFilename());
+//			FileInputStream fis2 = new FileInputStream(saveDir + file2.getOriginalFilename());
+//			FileOutputStream fos2 = new FileOutputStream(realDir + file2.getOriginalFilename());
+//			FileInputStream fis3 = new FileInputStream(saveDir + file3.getOriginalFilename());
+//			FileOutputStream fos3 = new FileOutputStream(realDir + file3.getOriginalFilename());
+//			FileInputStream fis4 = new FileInputStream(saveDir + file4.getOriginalFilename());
+//			FileOutputStream fos4 = new FileOutputStream(realDir + file4.getOriginalFilename());
+//			FileInputStream fis5 = new FileInputStream(saveDir + file5.getOriginalFilename());
+//			FileOutputStream fos5 = new FileOutputStream(realDir + file5.getOriginalFilename());
+//
+//			int data1 = 0;
+//			int data2 = 0;
+//			int data3 = 0;
+//			int data4 = 0;
+//			int data5 = 0;
+//
+//			while ((data1 = fis1.read()) != -1) {
+//				fos1.write(data1);
+//			}
+//			fis1.close();
+//			fos1.close();
+//
+//			while ((data2 = fis2.read()) != -1) {
+//				fos2.write(data2);
+//			}
+//			fis2.close();
+//			fos2.close();
+//			while ((data3 = fis3.read()) != -1) {
+//				fos3.write(data3);
+//			}
+//			fis3.close();
+//			fos3.close();
+//			while ((data4 = fis4.read()) != -1) {
+//				fos4.write(data4);
+//			}
+//			fis4.close();
+//			fos4.close();
+//			while ((data5 = fis5.read()) != -1) {
+//				fos5.write(data5);
+//			}
+//			fis5.close();
+//			fos5.close();
+//			
+//			
+//			
+//			
+//			
+//			
+//		}catch(IOException e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 	

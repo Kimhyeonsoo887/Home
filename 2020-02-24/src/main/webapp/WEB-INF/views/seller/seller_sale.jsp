@@ -119,9 +119,6 @@ li{
 <%@include file="util_sidebar.jsp" %>
 
 
-
-
-
 <div style="width: 80%; height: 50px;" >
 	
 	<div style="border: 1px solid black; width: 20%; height: 50px; float:left; margin-left:50px;">
@@ -153,7 +150,7 @@ li{
 
  
 <div class="article">
-        <form action = "seller_sale_Pro.all?${_csrf.parameterName} = ${_csrf.token}" method = "post">
+        <form action = "sellerSalePro.sel?${_csrf.parameterName} = ${_csrf.token}" method = "post">
             <table style="border-collapse: collapse" align = center>
             	
             	<tr>

@@ -12,5 +12,8 @@ public interface DAO_Seller {
 
 	
 	//매물등록
-	public int seller_sale_Pro(VO_Property vo);
+	public int sellerSalePro(VO_Property vo);
+//	
+//	//매물등록 (이미지)
+//	public int seller_sale_Pro_Images(VO_Property vo);
 }
