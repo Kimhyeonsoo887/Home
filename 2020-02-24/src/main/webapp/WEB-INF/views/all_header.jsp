@@ -21,9 +21,6 @@
       <!-- 세션설정에 따른 출력 값 -->
       <c:if test="${empty sessionScope.memID}">
       
-     	<a href="admin_login.all" style="float: left; margin-top: 15px; color:#888888;">관리자 로그인</a>
-     	<div style="float: left; margin-left:13px; margin-top:15px; width:20px; height:20px; border-left: 1px solid #DDDDDD;"></div>
-     	<a href="#" style="float: left; margin-top: 15px; color:#888888;">셀러 로그인</a>
      	
      	<!-- <a style="float:right; margin-top:7px; margin-right:20px;" class="btn btn-primary" href="all_signup.all">회원가입</a> -->
       	<a style="float:right; margin-top:7px; margin-right:20px;" class="btn btn-primary" href="all_login.all">로그인</a>

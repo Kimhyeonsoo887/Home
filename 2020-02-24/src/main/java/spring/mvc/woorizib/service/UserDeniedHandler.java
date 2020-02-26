@@ -23,8 +23,8 @@ public class UserDeniedHandler implements AccessDeniedHandler{
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-		request.setAttribute("errMsg", "관리자만 접근이 가능한 페이지입니다.");
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/denied.jsp");
+		//request.setAttribute("errMsg", "접근 권한이 없습니다.");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/error/error_503.jsp");
 		dispatcher.forward(request, response);
 	}
 

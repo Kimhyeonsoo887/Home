@@ -9,7 +9,14 @@ public class VO_Member {
 	private String mem_pw; 		//VARCHAR2(20) NOT NULL,
 	private String mem_certification; 		//CHAR(1) DEFAULT 0
 	private String authority;
+	private String mem_key;
 	
+	public String getMem_key() {
+		return mem_key;
+	}
+	public void setMem_key(String mem_key) {
+		this.mem_key = mem_key;
+	}
 	public String getMem_pw() {
 		return mem_pw;
 	}

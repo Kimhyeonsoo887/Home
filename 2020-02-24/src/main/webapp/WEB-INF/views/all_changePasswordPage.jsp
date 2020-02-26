@@ -3,18 +3,28 @@
 <%@ include file="all_setting.jsp" %>
 <html>
 <body>
-<form action="all_changePasswordPagePro.all" method="post">
-<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-<input type="hidden" name="member_id" value="${member_id}">
+<script>
+	
+	function checkPw(){
+		if(document.getElementById('pw').value != document.getElementById('repw').value){
+			alert("비밀번호가 일치하지 않습니다.");
+			return false;
+		}
+	}
+	
+</script>
+<form action="all_changePasswordPagePro.all" method="post" onsubmit="return checkPw();">
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
+<input type="hidden" name="id" value="${param.id}">
 		<table>
 		
 			<tr>
 				<th>변경할 비밀번호</th>
-				<td><input type="text" name="member_pw"></td>
+				<td><input type="text" name="pw" id="pw" ></td>
 			</tr>
 			<tr>
 				<th>비밀번호 재입력</th>
-				<td><input type="text" name="pwd2"></td>
+				<td><input type="text" name="repw" id="repw" ></td>
 			</tr>
 
 		<tr align="center"> 

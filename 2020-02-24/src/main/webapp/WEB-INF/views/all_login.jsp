@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="all_setting.jsp" %>
 <!DOCTYPE HTML>
-<html lang="zxx">
+<html lang="ko">
 
 <head>
 	<title>우리집 로그인</title>
@@ -50,31 +50,48 @@
 			$("#sellersignupArticle").show();
 		}
 
+	</script>
 	
+	<script>
+	$(function(){ 
+		$("input[name=name]").keyup(function (event) {
+	        regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+	        v = $(this).val();
+	        if (regexp.test(v)) {
+	            alert("한글만 입력가능 합니다.");
+	            $(this).val(v.replace(regexp, ''));
+	        }
+	    });
 		
+		$("input[name=phone]").keyup(function (event) {
+            regexp = /[^0-9]/gi;
+            v = $(this).val();
+            if (regexp.test(v)) {
+                alert("숫자만 입력가능 합니다.");
+                $(this).val(v.replace(regexp, ''));
+            }
+        });
+		
+		$(".ids").keyup(function (event) {
+            regexp = /[^a-zA-Z0-9]/gi;
+            v = $(this).val();
+            if (regexp.test(v)) {
+                alert("영어, 숫자만 입력가능 합니다.");
+                $(this).val(v.replace(regexp, ''));
+            }
+        });
+
+	}); 
 	</script>
 
-
+<script src="${javascripts}/signup_javascript.js"></script>
 </head>
 
 <body>
-<c:if test="${findCnt == 1}">
-	<c:if test="${findPhone == 1}">
-		<script>
-			alert("아이디는: ${member_id} 입니다.");
-		</script>
-	</c:if>
-	
-	<c:if test="${findPhone == 0}">
-		<script>
-			alert("입력하신 명의와 일치한 번호가 존재하지 않습니다.");
-		</script>
-	</c:if>
-</c:if>
 
-<c:if test="${findCnt == 0}">
+<c:if test="${!empty errMsg}">
 	<script>
-		alert("입력하신 이름은 존재하지 않습니다.");
+		alert("${errMsg}");
 	</script>
 </c:if>
 
@@ -134,13 +151,15 @@
 
 					<!-- 일반 회원가입 -->
 					<article id="membersignupArticle">
-						<form action="all_signup_pro.all" method="post">
+						<form action="all_signup_pro.all" method="post" name="membersignupform" onsubmit="return signupCheckMember();">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+							<input type="hidden" name="hiddenidM" value="0">
 							<h3 class="legend">일반회원 회원가입</h3>
 							<div class="input">
 								<span class="fa fa-user-circle-o" aria-hidden="true"></span>
-								<input type="text" placeholder="아이디" name="id" required/>
-								<button style="width: 20%; background-color: none;">중복확인</button>
+								<input type="text" placeholder="아이디" name="id" class="ids" maxlength="20" required/>
+								<input type="button" name="confirmM" onclick="confirmMemberid();" style="width: 20%; background-color: none;" value="중복확인">
+								<!-- <button style="width: 20%; background-color: none;" name="confirmM" onclick="confirmMemberid();">중복확인</button> -->
 							</div>
 							<div class="input">
 								<span class="fa fa-key" aria-hidden="true"></span>
@@ -151,11 +170,11 @@
 							</div>
 							<div class="input">
 								<span class="fa fa-id-badge" aria-hidden="true"></span>
-								<input type="text" placeholder="이름" name="name" required />
+								<input type="text" placeholder="이름" name="name" maxlength="20" required />
 							</div>
 							<div class="input">
 								<span class="fa fa-envelope-o" aria-hidden="true"></span>
-								<input type="email" placeholder="이메일" name="email" required />
+								<input type="email" placeholder="이메일" name="email" maxlength="50" required />
 							</div>
 							<div class="input">
 								<span class="fa fa-mobile" aria-hidden="true"></span>
@@ -170,13 +189,14 @@
 
 					<!-- 셀러 회원가입 -->
 					<article id="sellersignupArticle">
-						<form action="seller_signup_pro.all?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">
+						<form action="seller_signup_pro.all?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" name="sellersignupform" onsubmit="return signupCheckSeller();">
 							<%-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"> --%>
 							<h3 class="legend">셀러 회원가입</h3>
+							<input type="hidden" name="hiddenidS" value="0">
 							<div class="input">
 								<span class="fa fa-user-circle-o" aria-hidden="true"></span>
-								<input type="text" placeholder="아이디" name="id" required/>
-								<button style="width: 20%; background-color: none;">중복확인</button>
+								<input type="text" placeholder="아이디" name="id" class="ids" required maxlength="20"/>
+								<input type="button" name="confirmS" onclick="confirmSellerid();" style="width: 20%; background-color: none;" value="중복확인">
 							</div>
 							<div class="input">
 								<span class="fa fa-key" aria-hidden="true"></span>
@@ -202,7 +222,7 @@
 							<div style="display: inline-flex; width: 100%;">
 								<div class="input" style="width:50%;">
 									<span class="fa fa-id-badge" aria-hidden="true"></span>
-									<input type="text" placeholder="이름" name="name" required maxlength="15" />
+									<input type="text" placeholder="이름" name="name" maxlength="20" required maxlength="15" />
 								</div>
 								<div style="width: 3%;"></div>
 								<div class="input" style="width:50%;">
@@ -227,7 +247,8 @@
 					<input type="radio" name="sections" id="option3">
 					<label for="option3" class="icon-left-w3pvt"><span class="fa fa-lock" aria-hidden="true"></span>아이디/비밀번호 찾기</label>
 					<article>
-						<form action="#" method="post">
+						<form method="post" name="findaccountform">
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 							<h3 class="legend last">아이디 찾기</h3>
 							<p class="para-style">이름과 휴대폰번호로 아이디를 찾을 수 있습니다.</p>
 							<!-- <p class="para-style-2"><strong>Need Help?</strong> Learn more about how to <a href="#">retrieve an existing
@@ -238,7 +259,18 @@
 								<span class="fa fa-mobile" aria-hidden="true"></span>
 								<input type="text" placeholder="휴대폰번호" name="phone" required />
 							</div>
-							<button type="submit" class="btn submit last-btn">찾기</button>
+														
+							<p style="text-align: center;">
+								<input type="radio" id="member2" name="findtype" value="member" checked>
+								<label class="membertype" for="member2" style="all: unset;">일반회원</label>
+								<input type="radio" id="seller2" name="findtype" value="seller" >
+								<label class="membertype" for="seller2" style="all: unset;">셀러</label>
+							</p>
+							
+							<button type="button" onclick="find_account();" class="btn submit last-btn">찾기</button>
+						</form>
+						<form action="all_change_password.all" method="post">
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 							<br>
 							<h3 class="legend last">비밀번호 변경</h3>
 							<p class="para-style">아이디를 입력하시면 등록된 이메일로 링크가 전송됩니다.</p>

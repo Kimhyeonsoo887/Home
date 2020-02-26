@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.Timestamp;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,44 +34,7 @@ public class Service_SellerImpl implements Service_Seller{
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;	// 비밀번호 암호화 객체
 
-	@Override
-	public void signupSeller(MultipartHttpServletRequest req, Model model) {
-		
-		MultipartFile licenseImage = req.getFile("license");
-		System.out.println("SERV licenseImage: "+licenseImage);
-		
-		String realDir="D:\\Dev57\\workspace\\Project_Woorizib\\src\\main\\webapp\\resources\\images\\licenseimages\\"; // 저장 경로
-		
-		try {
-			VO_Seller vo = new VO_Seller();
-			
-			licenseImage.transferTo(new File(realDir+licenseImage.getOriginalFilename()));
-			System.out.println("파일 확인: "+licenseImage.getOriginalFilename());
-			vo.setSel_license(licenseImage.getOriginalFilename());
-			
-			String sel_id = req.getParameter("id");
-			String sel_pw = req.getParameter("pw");
-			String encryptPw = passwordEncoder.encode(sel_pw);
-			String sel_name = req.getParameter("name");
-			int sel_phone = Integer.parseInt(req.getParameter("phone"));
-			String sel_email = req.getParameter("email");
-			
-			vo.setSel_id(sel_id);
-			vo.setSel_pw(encryptPw);
-			vo.setSel_name(sel_name);
-			vo.setSel_phone(sel_phone);
-			vo.setSel_email(sel_email);
-			
-			
-			int signupCnt = 0;
-			
-			signupCnt = daoSeller.signupSeller(vo);
-			
-			model.addAttribute("signupCnt", signupCnt);
-		}catch(IOException e) {
-            e.printStackTrace();
-        }
-	}
+	
 
 	@Override
 	public void seller_sale_Pro(MultipartHttpServletRequest req, Model model) {

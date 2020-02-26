@@ -34,36 +34,54 @@ public class UserLoginFailureHandler implements AuthenticationFailureHandler{
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 	
-		System.out.println("[LOGIN FAILED]");
+		System.out.println("[알림] 로그인에 실패하였습니다.");
 		
-		String input_id =  request.getParameter("id");
+		String input_id = request.getParameter("id");
 		String input_pw = request.getParameter("pw");
 		
-		System.out.println("input_id" + input_id);
-		System.out.println("input_pw" + input_pw);
-		int cnt = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.idCheck",input_id);
-		System.out.println("cnt:" + cnt);
+		System.out.println("입력된 아이디: " + input_id);
+		System.out.println("입력된 비밀번호: " + input_pw);
 		
-		if(cnt!=0) {
-			
-			String pwd = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.pwdCheck",input_id);
-			
-			//이메일 인증에 따른 경고창 설정 부분, 어떻게 할지 지정하지 않았다.
-			
-			if(passwordEncoder.matches(input_pw, pwd)) {
-				request.setAttribute("errMsg", "이메일 인증이 되지 않은 계정입니다.");
-				request.setAttribute("selectCnt", 3); //이메일 인증 띄우기 예)
-			}else {
-				request.setAttribute("errMsg", "비밀번호가 일치하지 않습니다.");
-				request.setAttribute("selectCnt", -1);
-			}
-			
-		}else {
-			request.setAttribute("errMsg", "아이디가 일치하지 않습니다.");
-			request.setAttribute("selectCnt", 0);
+		String logintype = request.getParameter("logintype");
+		System.out.println("입력된 로그인타입: " + logintype);
+		
+		int cnt = 0;
+		
+		if(logintype.equals("member")) {
+			System.out.println("Member_tbl에 아이디 존재여부 확인중입니다.");
+			cnt = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.checkAccount", input_id);
+		}else if(logintype.equals("seller")) {
+			System.out.println("Seller_tbl에 아이디 존재여부 확인중입니다.");
+			cnt = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.checkAccountS", input_id);
 		}
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/all_loginPro.all");
+		//관리자는 확인하지 않는다.
+		System.out.println("아이디 존재여부(0: 존재안함, 1: 존재함): " + cnt);
+		
+		
+		if(cnt!=0) {
+			if(logintype.equals("member")) {
+				String mem_pw = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.pwdCheck",input_id);
+				if(passwordEncoder.matches(input_pw, mem_pw)) {
+					request.setAttribute("errMsg", "이메일 인증이 완료되지 않았습니다.");
+				}else {
+					request.setAttribute("errMsg", "비밀번호가 일치하지 않습니다.");
+				}
+			}else if(logintype.equals("seller")) {
+				String sel_pw = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.pwdCheckS",input_id);
+				if(passwordEncoder.matches(input_pw, sel_pw)) {
+					request.setAttribute("errMsg", "이메일 인증이 완료되지 않았습니다.");
+				}else {
+					request.setAttribute("errMsg", "비밀번호가 일치하지 않습니다.");
+				}
+			}else {
+				System.out.println("관리자 로그인 실패시 출력됩니다. 출력이 되면 안됩니다.");
+			}
+		}else {
+			request.setAttribute("errMsg", "아이디가 존재하지 않습니다.");
+		}
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/all_login.all");
 		dispatcher.forward(request, response);
 	}
 

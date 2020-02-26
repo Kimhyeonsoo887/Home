@@ -7,14 +7,9 @@
 <mapper namespace = "spring.mvc.woorizib.persistence.DAO_Seller">
 	
 	<insert id="signupSeller" parameterType="spring.mvc.woorizib.vo.VO_Seller">
-		INSERT INTO SELLER_TBL(sel_id, sel_pw, sel_name, sel_email, sel_phone, sel_license)
-		VALUES(#{sel_id}, #{sel_pw}, #{sel_name}, #{sel_email}, #{sel_phone}, #{sel_license})
+		INSERT INTO Seller_tbl(sel_id, sel_pw, sel_name, sel_email, sel_phone, sel_license, sel_key)
+		VALUES(#{sel_id}, #{sel_pw}, #{sel_name}, #{sel_email}, #{sel_phone}, #{sel_license}, #{sel_key})
 	</insert>
-	
-	<insert id="seller_sale_Pro" parameterType="spring.mvc.woorizib.vo.PropertyVo" >
-		
-	</insert>
-	
 	
 	
 </mapper>  

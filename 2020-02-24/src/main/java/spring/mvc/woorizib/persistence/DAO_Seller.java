@@ -8,9 +8,11 @@ import spring.mvc.woorizib.vo.VO_Seller;
 
 public interface DAO_Seller {
 
-	int signupSeller(VO_Seller vo);
-
 	
+
 	//매물등록
 	public int seller_sale_Pro(VO_Property vo);
+
+
+	
 }

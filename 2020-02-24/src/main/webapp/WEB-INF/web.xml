@@ -78,15 +78,15 @@
 	<!-- 5. 에러처리 페이지 시작 -->
 	<error-page>
 		<error-code>404</error-code>
-		<location>/woorizib/error/error_404.jsp</location>
+		<location>/404</location>
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/woorizib/error/error_500.jsp</location>
+		<location>/500</location>
 	</error-page>
 	<error-page>
 		<error-code>503</error-code>
-		<location>/woorizib/error/error_503.jsp</location>
+		<location>/503</location>
 	</error-page>
 	<!-- 에러처리 페이지 종료 -->
 	

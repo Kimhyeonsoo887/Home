@@ -20,17 +20,14 @@ public class DAO_SellerImpl implements DAO_Seller {
 
 	@Autowired
 	SqlSession sqlSession;
-
-	@Override
-	public int signupSeller(VO_Seller vo) {
-		return sqlSession.insert("spring.mvc.woorizib.persistence.DAO_Seller.signupSeller", vo);
-	}
-
+	
 	@Override
 	public int seller_sale_Pro(VO_Property vo) {
 		
 		return sqlSession.insert("spring.mvc.woorizib.persistence.DAO_Seller.seller_sale_Pro",vo);
 	}
+
+
 
 	
 	

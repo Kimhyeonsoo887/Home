@@ -70,18 +70,8 @@ private static final Logger logger = LoggerFactory.getLogger(Controller_Seller.c
 	
 	
 	/* 20.02.24 - 문성혁, 셀러 회원가입 */
-	@RequestMapping("/seller_signup.sel")
-	public String admin_signup() {
-		logger.info("▶ /seller_signup.sel");
-		return "seller_signup";
-	}
-	//셀러 회원가입처리
-	@RequestMapping(value="/seller_signup_pro.sel", method=RequestMethod.POST)
-	public String admin_signup_pro(MultipartHttpServletRequest req, Model model) {
-		logger.info("▶ /seller_signup_pro.sel");
-		serviceSeller.signupSeller(req, model);
-		return "seller_signup_pro";
-	}
+
+
 	/* 20.02.24 - 문성혁, 셀러 회원가입 */
 	
 

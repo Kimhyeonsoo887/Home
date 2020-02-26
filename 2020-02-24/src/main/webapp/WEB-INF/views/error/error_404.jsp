@@ -26,7 +26,7 @@
 				<h1>어머나!</h1>
 				<h2>404 - 페이지를 찾을 수 없습니다.</h2>
 			</div>
-			<a href="all_index.all">메인으로</a>
+			<a href="all_index.all">홈으로</a>
 		</div>
 	</div>
 

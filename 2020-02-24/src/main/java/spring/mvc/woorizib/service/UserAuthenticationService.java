@@ -49,22 +49,18 @@ public class UserAuthenticationService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String input_id) throws UsernameNotFoundException {
 		
-		System.out.println(input_id + "님이 로그인을 시도하였습니다.");
-		System.out.println("아니 왜 안타는데;");
+		System.out.println(" > "+input_id + "님이 로그인을 시도하였습니다.");
 		
 		HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-		
 		String logintype = req.getParameter("logintype");
 		
-		System.out.println("logintype: "+ logintype);
-		
+		System.out.println("로그인 종류: "+ logintype);
 		
 		if(logintype.equals("member")) {
-			System.out.println("MEMBER 입니다.");
+			System.out.println("[일반회원] 시큐리티가 작동중입니다.");
 			// id와 패스워드가 불일치시 null이 넘어오고, 일치시 계정이 넘어온다.
 			// 비밀번호 체크로직은 스프링 시큐리티안에 숨어있다.
 			VO_Member vo = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.readMember", input_id);
-			System.out.println("input id :"+input_id);
 			// 인증 실패시 인위적으로 예외 발생
 			if(vo == null) throw new UsernameNotFoundException(input_id);
 			// List나 ArrayList 먼저 import하고 GrantedAuthority import
@@ -79,24 +75,18 @@ public class UserAuthenticationService implements UserDetailsService{
 			return new VO_User(vo.getMem_id(),vo.getMem_pw(),vo.getMem_certification().equals("1"),
 					true,true,true,authority);
 		}else if(logintype.equals("seller")) {
-			System.out.println("SELLER 입니다.");
+			System.out.println("[셀러] 시큐리티가 작동중입니다.");
 			//셀러 로그인 파트
 			VO_Seller vo = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.readSeller", input_id);
-			
-			System.out.println("input id :"+input_id);
-			
 			if(vo == null) throw new UsernameNotFoundException(input_id);
-			
 			List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
-			
 			authority.add(new SimpleGrantedAuthority(vo.getAuthority()));
-			
 			return new VO_User(vo.getSel_id(),vo.getSel_pw(),vo.getSel_certification().equals("2"),
 					true,true,true,authority);
 			
 		}else{
 			//관리자 로그인 파트
-			System.out.println("ADMIN 입니다.");
+			System.out.println("[관리자] 시큐리티가 작동중입니다.");
 			VO_Admin vo = sqlSession.selectOne("spring.mvc.woorizib.persistence.DAO_All.readAdmin", input_id);
 			if(vo == null) throw new UsernameNotFoundException(input_id);
 			List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();

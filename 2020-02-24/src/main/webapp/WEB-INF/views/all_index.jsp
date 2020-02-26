@@ -33,7 +33,7 @@
     <div class="container">
       <div class="row">
         <div class="col-xl-9 mx-auto">
-          <h1 class="mb-5">어떤 동네, 어떤 방에서 <br>살고 싶으신가요?</h1>
+          <h1 class="mb-5">지금 살고싶은 그 곳,<br>어딘지 알려주시겠어요?<br> </h1>
         </div>
         <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
           <form action="selectHouse" method="post">
@@ -43,7 +43,7 @@
                 <input type="text" class="form-control form-control-lg">
               </div>
               <div class="col-12 col-md-3">
-                <button type="submit" class="btn btn-block btn-lg btn-primary">방 찾기</button>
+                <button type="submit" class="btn btn-block btn-lg btn-primary">지금 찾기</button>
               </div>
             </div>
           </form>

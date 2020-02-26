@@ -34,12 +34,11 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler{
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		
-		
+		System.out.println("[알림] 로그인에 성공하였습니다.");
 		
 		VO_User vo = (VO_User) authentication.getPrincipal();
-		System.out.println("authentication.getPrincipal(): " + authentication.getPrincipal());
-		System.out.println("vo.getAuthorities(): " + vo.getAuthorities());
-		
+		System.out.println("로그인 정보: " + authentication.getPrincipal());
+		System.out.println("로그인 권한: " + vo.getAuthorities());
 		
 		String login_id = authentication.getName();
 		
@@ -47,38 +46,30 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler{
 		
 		if(vo.getAuthorities().toString().equals("[ROLE_MEMBER]")) {
 			//멤버
-			System.out.println("로그인성공 MEMBER");
-			
-			request.setAttribute("selectCnt", 1);
+			System.out.println("MEMBER가 로그인 하였습니다.");
 			request.setAttribute("logintype", vo.getAuthorities().toString());
-			
-			
-			dispatcher = request.getRequestDispatcher("/all_loginPro.all");
+			dispatcher = request.getRequestDispatcher("/all_index.all");
 			
 		}else if(vo.getAuthorities().toString().equals("[ROLE_SELLER]")){
 			//셀러
-			System.out.println("로그인성공 SELLER");
-			
-			request.setAttribute("selectCnt", 1);
+			System.out.println("SELLER가 로그인 하였습니다.");
 			request.setAttribute("logintype", vo.getAuthorities().toString());
-			dispatcher = request.getRequestDispatcher("/all_loginPro.all");
+			dispatcher = request.getRequestDispatcher("/seller_main.sel");
 			
 		}else if(vo.getAuthorities().toString().equals("[ROLE_ADMIN]")){
 			//관리자
-			System.out.println("로그인성공 ADMIN");
-			
-			request.setAttribute("selectCnt", 1);
+			System.out.println("ADMIN이 로그인 하였습니다.");
 			request.setAttribute("logintype", vo.getAuthorities().toString());
+			dispatcher = request.getRequestDispatcher("/admin_index.all");
 			
-			
-			dispatcher = request.getRequestDispatcher("/all_loginPro.all");
 		}else {
+			//혹시모를 에러
+			System.out.println("이것은 출력되면 안됩니다. (UserLoginSuccessHandler.java)");
 			dispatcher = request.getRequestDispatcher("/all_index.all");
 		}
+		
 		request.getSession().setAttribute("memID", login_id);
 		dispatcher.forward(request, response);
-		
-		//request.setAttribute("selectCnt", 1);
 		
 	}
 
