@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace = "spring.mvc.bridge.persistence.DAO_Main">
+	
+	<insert id="signUp" parameterType="spring.mvc.bridge.vo.VO_Member">
+		INSERT INTO Member_tbl(mem_id, mem_pw, mem_email, mem_name ,mem_phone ,mem_certification ,mem_key ,mem_registerdate ,authority)
+		VALUES(#{mem_id}, #{mem_pw}, #{mem_email}, #{mem_name}, #{mem_phone}, DEFAULT, 'ww2',DEFAULT,'ROLE_USER')
+	</insert>
+	
+	<select id = "idCheck" resultType = "int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_id = #{mem_id}
+	</select>
+
+	<select id = "pwdCheck" resultType = "String">
+		SELECT mem_pw FROM Member_tbl WHERE mem_id = #{mem_id}                                      
+	</select>
+	
+	<select id = "authCheck" resultType = "String">
+		SELECT authority FROM Member_tbl WHERE mem_id = #{mem_id}
+	</select>
+	
+	<select id = "readMember" resultType = "spring.mvc.bridge.vo.VO_Member">
+		SELECT * FROM Member_tbl WHERE mem_id = #{mem_id}
+	</select>
+	
+	
+	<!--회원정보 수정   -->
+	<update id="updateMember" parameterType="spring.mvc.bridge.vo.VO_Member">
+	update Member_tbl
+	SET mem_pw = #{mem_pw}, mem_phone=#{mem_phone}
+	WHERE mem_id = #{mem_id}
+	</update>
+	
+	<!-- 회원탈퇴-->
+	<delete id="deleteMember" parameterType="String">
+	delete Member_tbl
+	WHERE mem_id=#{mem_id}
+	</delete>
+	
+	<!-- 20.02.13 - 문성혁: 아이디, 비밀번호 찾기  -->
+	<select id="checkName" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_name = #{inputName}
+	</select>
+	
+	<select id="checkPhone" parameterType="java.util.Map"  resultType="int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_name = #{mem_name} AND mem_phone = #{mem_phone}
+	</select>
+	
+	<select id="findAccount" parameterType="java.util.Map" resultType="String">
+		SELECT mem_id FROM Member_tbl WHERE mem_name = #{mem_name} AND mem_phone = #{mem_phone}
+	</select>
+	
+	<select id="findEmail" parameterType="String" resultType="String">
+		SELECT mem_email FROM Member_tbl WHERE mem_email = #{mem_id}
+	</select>
+	
+	<select id="checkAccount" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_email = #{mem_id}
+	</select>
+	
+	<update id="changePassword" parameterType="java.util.Map">
+		UPDATE Member_tbl
+		SET mem_pw = #{encryptPw}
+		WHERE mem_email = #{mem_email}
+	</update>
+	<!-- 20.02.13 - 문성혁: 아이디, 비밀번호 찾기  -->
+	
+	
+	
+	
+	
+	<!-- 회원가입, 로그인 -->
+
+	<!--
+	<insert id="insertmem" parameterType = "spring.mvc.bridge.vo.VO_mem">
+		INSERT INTO mem(mem_id, mem_pw, mem_email, key)
+		VALUES (#{mem_id}, #{mem_pw}, #{mem_email}, #{key})
+	</insert>
+	
+	<select id="searchId" resultType = "String">
+		SELECT mem_id FROM mem WHERE m_name = #{m_name} AND mem_email = #{mem_email}
+	</select>
+	
+	<select id = "searchPwd" resultType = "String">
+		SELECT mem_pw FROM mem 
+		WHERE mem_id = #{mem_id} AND m_name = #{m_name} AND m_pwdQ = #{m_pwdQ} AND m_pwdA = #{m_pwdA}
+	</select>
+	
+	<select id = "gradeCheck" resultType = "String">
+		SELECT m_authority FROM mem WHERE mem_id = #{mem_id}
+	</select>
+	
+	<select id = "selectKey" resultType = "int">
+		SELECT COUNT(*) FROM mem WHERE m_key = #{key}
+	</select>
+	
+	<update id = "updateGrade" parameterType="String">
+		UPDATE mem SET m_enabled = 1 WHERE m_key = #{key}
+	</update> -->
+</mapper>  
+    
