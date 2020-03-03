@@ -10,6 +10,23 @@
 		INSERT INTO Seller_tbl(sel_id, sel_pw, sel_name, sel_email, sel_phone, sel_license, sel_key)
 		VALUES(#{sel_id}, #{sel_pw}, #{sel_name}, #{sel_email}, #{sel_phone}, #{sel_license}, #{sel_key})
 	</insert>
+<<<<<<< HEAD
+=======
+<!-- 	
+ 	<insert id="sellerSalePro" parameterType="spring.mvc.woorizib.vo.VO_Property">
+		INSERT INTO Property_tbl(prp_number ,prp_name, prp_address, prp_selltype, prp_termtype, prp_deposit, 
+								prp_monthlycost, prp_leasecost, prp_propertycost, prp_supplyarea, prp_dedicatedarea,
+								prp_maxfloor, prp_floor, prp_type, prp_elevator, prp_parking, prp_moreoption,
+								prp_availabledate, prp_detail, prp_maintenancecost, prp_registerdate)
+		
+		
+		VALUES(seq_property.nextval, #{prp_name}, #{prp_address}, #{prp_selltype}, #{prp_termtype}, #{prp_deposit},
+									#{prp_monthlycost}, #{prp_leasecost}, #{prp_propertycost}, #{prp_supplyarea}, #{prp_dedicatedarea},
+									#{prp_maxfloor}, #{prp_floor}, #{prp_type}, #{prp_elevator}, #{prp_parking}, #{prp_moreoption},
+									#{prp_availabledate}, #{prp_detail}, #{prp_maintenancecost}, #{prp_registerdate})
+	</insert>
+	  -->
+>>>>>>> 875bf54fdb72fbed0623eb04b4a5587032cae5b3
 	
 	
 </mapper>  
