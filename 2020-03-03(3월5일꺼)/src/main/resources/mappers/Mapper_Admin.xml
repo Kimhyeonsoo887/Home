@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace = "spring.mvc.woorizib.persistence.DAO_Admin">
+	
+	<insert id="signupAdmin" parameterType="spring.mvc.woorizib.vo.VO_Admin">
+		INSERT INTO ADMIN_TBL(adm_id, adm_pw, adm_email, adm_name, adm_phone)
+		VALUES(#{adm_id}, #{adm_pw}, #{adm_email}, #{adm_name}, #{adm_phone})
+	</insert>
+	
+	<!--================================2020.02.26 유기복	-->
+	
+	<!-- 셀러 승인관리 셀러요청 회원 수 -->
+	<select id = "admin_approvesellerCnt" resultType = "int">
+		SELECT COUNT(*) as cnt FROM Seller_tbl
+	</select>
+	
+	<!-- 셀러 승인관리 셀러요청 목록 -->
+	<select id = "admin_approvesellerCntList" parameterType="spring.mvc.woorizib.vo.VO_Seller" resultType = "spring.mvc.woorizib.vo.VO_Seller">
+		<![CDATA[
+		SELECT * FROM (SELECT sel_id, sel_name, sel_pw, sel_email, sel_phone, sel_license, sel_key, sel_certification, sel_registerdate, authority, agn_number, rownum rNum
+				FROM (SELECT * FROM Seller_tbl))
+				WHERE rNum >= #{start} AND rNum <= #{end}  
+		]]>                                   
+	</select>
+	
+	<!-- 셀러 승인관리 (셀러승인) -->
+	<update id = "admin_sellerAuth" parameterType="String" >
+		update Seller_tbl set sel_certification = 2
+		where sel_id = #{sel_id}
+	</update>
+	
+	<!-- 셀러 승인관리 (이메일수동승인) -->
+	<update id = "admin_emailAuth" parameterType="String" >
+		update Seller_tbl set sel_certification = 1
+		where sel_id = #{sel_id}
+	</update>
+	
+	<!-- 셀러 검색기능 -->
+	<select id = "admin_sellerSearch" resultType = "spring.mvc.woorizib.vo.VO_Seller">
+		<![CDATA[
+		SELECT * FROM (SELECT sel_id, sel_name, sel_pw, sel_email, sel_phone, sel_license, sel_key, sel_certification, sel_registerdate, authority, agn_number, rownum rNum
+				FROM (SELECT * FROM Seller_tbl))
+				WHERE sel_id LIKE #{search}  
+		]]> 
+	</select>
+	
+	<!-- 회원상태관리 회원 수 -->
+	<select id = "admin_administratemembersCnt" resultType = "int">
+		SELECT COUNT(*) as cnt FROM Member_tbl
+	</select>
+	
+	<!-- 회원상태관리 목록 -->
+	<select id = "admin_administratemembersCntList" parameterType="spring.mvc.woorizib.vo.VO_Member" resultType = "spring.mvc.woorizib.vo.VO_Member">
+		<![CDATA[
+		SELECT * FROM (SELECT mem_id, mem_name, mem_pw, mem_email, mem_phone, mem_key, mem_certification, mem_registerdate, authority, rownum rNum
+				FROM (SELECT * FROM Member_tbl))
+				WHERE rNum >= #{start} AND rNum <= #{end}  
+		]]>                                   
+	</select>
+	
+	<!-- 일반회원 검색기능 -->
+	<select id = "admin_memberSearch" resultType = "spring.mvc.woorizib.vo.VO_Member">
+		<![CDATA[
+		SELECT * FROM (SELECT mem_id, mem_name, mem_pw, mem_email, mem_phone, mem_key, mem_certification, mem_registerdate, authority, rownum rNum
+				FROM (SELECT * FROM Member_tbl))
+				WHERE mem_id LIKE #{search2}  
+		]]> 
+	</select>
+	
+	<!-- 불량회원 신고관리 셀러 회원 수 -->
+	<select id = "admin_reportCnt" resultType = "int">
+		SELECT COUNT(*) as cnt FROM Seller_tbl
+	</select>
+	
+	<!-- 불량회원 신고관리 셀러 목록  -->
+	<select id = "admin_reportCntList" parameterType="spring.mvc.woorizib.vo.VO_Seller" resultType = "spring.mvc.woorizib.vo.VO_Seller">
+		<![CDATA[
+		SELECT * FROM (SELECT sel_id, sel_name, sel_pw, sel_email, sel_phone, sel_license, sel_key, sel_certification, sel_registerdate, sel_reportcnt, authority, agn_number, rownum rNum
+				FROM (SELECT * FROM Seller_tbl))
+				WHERE rNum >= #{start} AND rNum <= #{end}  
+		]]>                                   
+	</select>
+	
+	<!-- 불량회원 신고관리 검색기능 -->
+	<select id = "admin_reportSearch" resultType = "spring.mvc.woorizib.vo.VO_Seller">
+		<![CDATA[
+		SELECT * FROM (SELECT sel_id, sel_name, sel_pw, sel_email, sel_phone, sel_license, sel_key, sel_certification, sel_registerdate, sel_reportcnt, authority, agn_number, rownum rNum
+				FROM (SELECT * FROM Seller_tbl))
+				WHERE sel_id LIKE #{search3}  
+		]]> 
+	</select>
+	
+	<!-- 불량회원 신고관리 (누적신고횟수 수정) -->
+	<update id = "admin_reportModifyCnt" parameterType="spring.mvc.woorizib.vo.VO_Seller" >
+		update Seller_tbl set sel_reportcnt = #{sel_reportcnt}
+		where sel_id = #{sel_id}
+	</update>
+	
+	<!--================================2020.02.26 유기복 END	-->
+	
+	
+</mapper>  
+    

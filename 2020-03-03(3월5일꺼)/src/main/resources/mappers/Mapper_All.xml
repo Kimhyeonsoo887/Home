@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace = "spring.mvc.woorizib.persistence.DAO_All">
+
+	<!-- 20.02.13 - 문성혁: 사용자 정보 불러오기 -->
+		<!-- 회원정보불러오기 -->
+		<select id ="readMember" resultType = "spring.mvc.woorizib.vo.VO_Member">
+			SELECT * FROM Member_tbl WHERE mem_id = #{input_id}
+		</select>
+		<!-- 셀러정보불러오기 -->
+		<select id="readSeller" resultType = "spring.mvc.woorizib.vo.VO_Seller">
+			SELECT * FROM Seller_tbl WHERE sel_id = #{input_id}
+		</select>
+		<!-- 관리자정보불러오기 -->
+		<select id="readAdmin" resultType = "spring.mvc.woorizib.vo.VO_Admin">
+			SELECT * FROM Admin_tbl WHERE adm_id = #{input_id}
+		</select>
+	<!-- 20.02.13 - 문성혁: 사용자 정보 불러오기 -->
+
+
+	<!-- 20.02.26 - 문성혁: 로그인, 회원가입, 아이디 & 비밀번호 찾기 -->
+	<!-- 멤버 아이디 존재여부 -->
+	<select id = "checkmemberid" resultType = "int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_id = #{id}
+	</select>
+	<!-- 셀러 아이디 존재여부 -->
+	<select id = "checksellerid" resultType = "int">
+		SELECT COUNT(*) FROM Seller_tbl WHERE sel_id = #{id}
+	</select>
+	
+	<!-- 일반 회원가입 -->
+	<insert id="signUp" parameterType="spring.mvc.woorizib.vo.VO_Member">
+		INSERT INTO Member_tbl(mem_id, mem_pw, mem_email, mem_name ,mem_phone, mem_key)
+		VALUES(#{mem_id}, #{mem_pw}, #{mem_email}, #{mem_name}, #{mem_phone}, #{mem_key})
+	</insert>
+	<!-- 셀러 회원가입 -->
+	
+	
+	
+	<!-- 아이디 중복확인(멤버 + 셀러, 동시) -->	
+	<select id = "signupconfirmid" resultType = "int">
+		SELECT 
+		(SELECT COUNT(*) FROM Member_tbl WHERE mem_id = #{id}) + 
+		(SELECT COUNT(*) FROM Seller_tbl WHERE sel_id = #{id}) 
+		FROM DUAL
+	</select>
+	
+	<!-- 멤버 비밀번호 확인(for UserLoginSuccessHandler) -->
+	<select id = "pwdCheck" resultType = "String">
+		SELECT mem_pw FROM Member_tbl WHERE mem_id = #{input_id}                                      
+	</select>
+	<!-- 셀러 비밀번호 확인(for UserLoginSuccessHandler) -->
+	<select id = "pwdCheckS" resultType = "String">
+		SELECT sel_pw FROM Seller_tbl WHERE sel_id = #{input_id}                                      
+	</select>
+	
+	<!-- 20.02.26 - 문성혁: 로그인, 회원가입, 아이디 & 비밀번호 찾기 -->
+	
+	<!-- 20.02.26 - 문성혁: 아이디, 비밀번호 찾기 -->
+	<!-- 입력된 계정의 권한 찾는 SQL -->
+	<select id="checkAuthorityById" resultType="String">
+		SELECT authority
+		FROM member_tbl
+		WHERE mem_id = #{id}
+		UNION
+		SELECT authority
+		FROM seller_tbl
+		WHERE sel_id = #{id}
+	</select>
+	<!-- 멤버이름확인 -->
+	<select id="checkName" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_name = #{inputName}
+	</select>
+	<!-- 멤버번호확인 -->
+	<select id="checkPhone" parameterType="java.util.Map"  resultType="int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_name = #{mem_name} AND mem_phone = #{mem_phone}
+	</select>
+	<!-- 멤버계정출력 -->
+	<select id="findAccount" parameterType="java.util.Map" resultType="String">
+		SELECT mem_id FROM Member_tbl WHERE mem_name = #{mem_name} AND mem_phone = #{mem_phone}
+	</select>
+	<!-- 멤버이메일출력 -->
+	<select id="findEmail" parameterType="String" resultType="String">
+		SELECT mem_email FROM Member_tbl WHERE mem_id = #{mem_id}
+	</select>
+	<!-- 멤버계정확인 -->
+	<select id="checkAccount" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_id = #{mem_id}
+	</select>
+	<!-- 멤버비밀번호변경 -->
+	<update id="changePassword" parameterType="java.util.Map">
+		UPDATE Member_tbl
+		SET mem_pw = #{encryptPw}
+		WHERE mem_id = #{mem_id}
+	</update>
+	
+	<!-- 셀러이름확인 -->
+	<select id="checkNameS" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM Seller_tbl WHERE sel_name = #{inputName}
+	</select>
+	<!-- 셀러번호확인 -->
+	<select id="checkPhoneS" parameterType="java.util.Map"  resultType="int">
+		SELECT COUNT(*) FROM Seller_tbl WHERE sel_name = #{sel_name} AND sel_phone = #{sel_phone}
+	</select>
+	<!-- 셀러계정출력 -->
+	<select id="findAccountS" parameterType="java.util.Map" resultType="String">
+		SELECT sel_id FROM Seller_tbl WHERE sel_name = #{sel_name} AND sel_phone = #{sel_phone}
+	</select>
+	<!-- 셀러이메일출력 -->
+	<select id="findEmailS" parameterType="String" resultType="String">
+		SELECT sel_email FROM Seller_tbl WHERE sel_id = #{sel_id}
+	</select>
+	<!-- 셀러계정확인 -->
+	<select id="checkAccountS" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM Seller_tbl WHERE sel_id = #{sel_id}
+	</select>
+	<!-- 셀러비밀번호변경 -->
+	<update id="changePasswordS" parameterType="java.util.Map">
+		UPDATE Seller_tbl
+		SET sel_pw = #{encryptPw}
+		WHERE sel_id = #{sel_id}
+	</update>
+	<!-- 20.02.26 - 문성혁: 아이디, 비밀번호 찾기 -->
+	
+	
+	
+	
+	
+	
+	
+	<!--회원정보 수정   -->
+	<update id="updateMember" parameterType="spring.mvc.woorizib.vo.VO_Member">
+	update Member_tbl
+	SET mem_pw = #{mem_pw}, mem_phone=#{mem_phone}
+	WHERE mem_id = #{mem_id}
+	</update>
+	
+	<!-- 회원탈퇴-->
+	<delete id="deleteMember" parameterType="String">
+		DELETE Member_tbl
+		WHERE mem_id=#{mem_id}
+	</delete>
+	
+	<select id="findMemberByKey" resultType="int">
+		SELECT COUNT(*) FROM Member_tbl WHERE mem_key = #{key}
+	</select>
+	
+	<update id="updateMemberCertf" parameterType="String">
+		UPDATE Member_tbl SET mem_certification = 1 WHERE mem_key = #{key}
+	</update>
+	
+	<select id="findSellerByKey" resultType="int">
+		SELECT COUNT(*) FROM Seller_tbl WHERE sel_key = #{key}
+	</select>
+	
+	<update id="updateSellerCertf" parameterType="String">
+		UPDATE Seller_tbl SET sel_certification = 1 WHERE sel_key = #{key}
+	</update>
+	
+	
+	
+	
+	
+	
+	<!-- 20200225 - 허은정: 커뮤니티  -->
+	<select id="getArticleCnt" resultType="int">
+  		SELECT COUNT(*) as cnt FROM generaldiscussion_tbl
+  	</select>
+
+  	<select id="getArticleList" parameterType="java.util.Map" resultType="spring.mvc.woorizib.vo.VO_Community">
+		<![CDATA[
+		SELECT * FROM (SELECT gnd_number, gnd_title, gnd_content, mem_id, sel_id, gnd_registerdate, rownum rNum 
+						  FROM (SELECT * FROM generaldiscussion_tbl
+						  ORDER BY gnd_number DESC	
+						  		)	
+						  )
+				WHERE rNum >= #{start} AND rNum <= #{end}
+		]]>	
+  	</select>
+  	
+  	<select id="getArticle" resultType="spring.mvc.woorizib.vo.VO_Community">
+  		SELECT * FROM generaldiscussion_tbl WHERE gnd_number=#{gnd_number}
+  	</select>
+  	
+  	<update id="updateCommunity" parameterType="spring.mvc.woorizib.vo.VO_Community" >
+  		UPDATE generaldiscussion_tbl SET gnd_content=#{gnd_content}, gnd_title=#{gnd_title} WHERE gnd_number=#{gnd_number}
+  	</update>
+  	
+  	<insert id="insertCommunity" parameterType="spring.mvc.woorizib.vo.VO_Community">
+  		INSERT INTO generaldiscussion_tbl(gnd_number, gnd_title, gnd_content, mem_id, sel_id, gnd_registerdate) 
+  		VALUES(seq_gnd.nextval,#{gnd_title},#{gnd_content},#{mem_id},null,sysdate)
+  	</insert>
+  	
+  	<delete id="deleteCommunity" parameterType="int">
+  		DELETE generaldiscussion_tbl WHERE gnd_number=#{gnd_number}
+  	</delete>
+  	<!-- 20200225 - 허은정: 커뮤니티  -->
+  	
+  	
+  	<!-- QNA 2020.02.23 -->
+	<!--Qna 갯수 구하기  -->
+	<select id="getQnaCnt" resultType="int">
+		SELECT COUNT(*) as cnt 
+		FROM Qna_tbl
+	</select>
+	
+	<!-- Qna 목록 -->
+	<select id="getQnaList" parameterType="java.util.Map" resultType="spring.mvc.woorizib.vo.VO_QnA">
+		<![CDATA[	
+			SELECT * FROM (SELECT qna_number, qna_type, qna_accessibility, qna_title, qna_registerdate,mem_id, qna_readcnt,rowNum as rNUM
+				FROM (  SELECT * FROM Qna_tbl
+						))
+			WHERE rNUM >= #{start} AND rNUM <= #{end} 
+		]]>
+	</select>
+	
+	
+	<!-- 박은슬 : 경매 -->
+   <select id = "getAuction" resultType = "spring.mvc.woorizib.vo.VO_Auction">
+      SELECT * FROM auction_tbl WHERE auc_number = #{auc_number}
+   </select>
+   
+   <select id = "getPrp_number" resultType = "String">
+      SELECT prp_number FROM auction_tbl WHERE auc_number = #{auc_number}
+   </select>
+   
+   <select id = "getProperty" resultType = "spring.mvc.woorizib.vo.VO_Property">
+      SELECT * FROM property_tbl WHERE prp_number = #{prp_number}
+   </select>
+   <select id = "getLiveAucs" resultType = "spring.mvc.woorizib.vo.VO_LiveAuc">
+      SELECT * FROM LiveAuction_tbl WHERE auc_number = #{auc_number} order by lac_registerdate desc
+      
+   </select>
+   <select id = "getNowPrice" resultType = "int">
+      SELECT max(lac_tender) FROM LiveAuction_tbl WHERE auc_number = #{auc_number}
+   </select>
+   <update id="checkAuction" parameterType="String">
+      UPDATE Auction_tbl SET auc_state='마감' where auc_endtime=#{time}
+   </update>
+   <!-- 박은슬 : 경매 -->
+</mapper>  
+    
