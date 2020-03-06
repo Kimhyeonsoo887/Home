@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace = "spring.mvc.woorizib.persistence.DAO_Member">
+	
+	<insert id="insertQna" parameterType="spring.mvc.woorizib.vo.VO_QnA">  
+	INSERT INTO Qna_tbl(qna_number,qna_type,qna_accessibility,qna_title,qna_content,qna_registerdate,mem_id,qna_readcnt)
+   	VALUES('QNA'||seq_qna.NEXTVAL,#{qna_type},#{qna_accessibility},#{qna_title},#{qna_content},sysdate,#{mem_id},0)
+	</insert>
+
+<!--조회수 증가  -->
+<update id="addReadCnt" parameterType="String">
+	UPDATE Qna_tbl SET qna_readcnt=qna_readcnt+1 WHERE qna_number=#{qna_number}
+</update>
+
+<!-- 상세페이지 조회, 글 수정 상세 페이지 -->
+<select id="getQna" resultType="spring.mvc.woorizib.vo.VO_QnA">
+	SELECT * FROM Qna_tbl WHERE qna_number= #{qna_number}
+</select>   
+
+ <!-- QNA 수정  처리 -->
+<update id="updateQna" parameterType="spring.mvc.woorizib.vo.VO_QnA">
+    UPDATE Qna_tbl SET qna_title=#{qna_title},qna_content=#{qna_content},qna_modifieddate=#{qna_modifieddate} WHERE qna_number=#{qna_number}
+</update>
+<!-- QNA 삭제 처리  -->
+   <delete id="deleteQna" parameterType="String">
+   		DELETE Qna_tbl WHERE qna_number=#{qna_number}
+   </delete>	
+<!--댓글 추가   -->
+<insert id="insertComment" parameterType="spring.mvc.woorizib.vo.VO_Comments">
+	INSERT INTO comment_tbl(cmt_number,cmt_content,cmt_registerdate,cmt_writer,qna_number)
+	VALUES('CMT'||seq_qna.NEXTVAL,#{cmt_content},#{cmt_registerdate},#{cmt_writer},#{qna_number})
+</insert>
+
+<!-- 댓글 리스트 가져오기  -->
+<select id="selectComment" parameterType="String" resultType="spring.mvc.woorizib.vo.VO_Comments">
+	SELECT cmt_content,cmt_writer
+	FROM comment_tbl
+	WHERE qna_number=#{qna_number}
+</select> 
+
+<!--박은슬 경매 결제-->
+   <insert id="auctionpayPro" parameterType="java.util.Map">
+      INSERT INTO LiveAuction_tbl(mem_id,lac_tender,auc_number,lac_account)
+      values(#{mem_id},#{lac_tender},#{auc_number},'11111111')
+   </insert>
+	
+	
+	<!-- 김현수 매물검색 2020-03-06 -->
+	<select id="selectProperty" resultType="spring.mvc.woorizib.vo.VO_Property">
+		select * from Property_tbl
+		where prp_selltype = '일반'
+	</select>
+	
+	<select id="selectPropertyDetail" parameterType="String" resultType="spring.mvc.woorizib.vo.VO_Property"> 
+		select * from Property_tbl
+		where prp_number = #{prp_number}
+	</select>
+	
+	
+	<!-- 김현수 매물검색 2020-03-06 -->
+</mapper>  
+    

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace = "spring.mvc.woorizib.persistence.DAO_Seller">
+	
+	<insert id="signupSeller" parameterType="spring.mvc.woorizib.vo.VO_Seller">
+		INSERT INTO SELLER_TBL(sel_id, sel_pw, sel_name, sel_email, sel_phone, sel_license)
+		VALUES(#{sel_id}, #{sel_pw}, #{sel_name}, #{sel_email}, #{sel_phone}, #{sel_license})
+	</insert>
+
+
+ 	<insert id="sellerSalePro" parameterType="spring.mvc.woorizib.vo.VO_Property">
+		INSERT INTO Property_tbl(prp_number ,prp_name, prp_address, prp_selltype, prp_termtype, prp_deposit, 
+								prp_monthlycost, prp_leasecost, prp_propertycost, prp_supplyarea, prp_dedicatedarea,
+								prp_maxfloor, prp_floor, prp_type, prp_elevator, prp_parking, prp_moreoption,
+								prp_availabledate, prp_detail, prp_maintenancecost, prp_registerdate, prp_accessibility,sel_id,
+								prp_title, prp_image1, prp_image2, prp_image3, prp_image4, prp_image5
+								)
+		
+		
+		VALUES(seq_property.nextval, #{prp_name}, #{prp_address}, #{prp_selltype}, #{prp_termtype}, #{prp_deposit},
+									#{prp_monthlycost}, #{prp_leasecost}, #{prp_propertycost}, #{prp_supplyarea}, #{prp_dedicatedarea},
+									#{prp_maxfloor}, #{prp_floor}, #{prp_type}, #{prp_elevator}, #{prp_parking}, #{prp_moreoption},
+									#{prp_availabledate}, #{prp_detail}, #{prp_maintenancecost}, sysdate, DEFAULT, #{sel_id},
+									#{prp_title}, #{prp_image1} , #{prp_image2}, #{prp_image3}, #{prp_image4} , #{prp_image5}
+									)
+	</insert>
+	  
+	
+	<select id="sellerSaleSelect" parameterType="java.util.Map" resultType="spring.mvc.woorizib.vo.VO_Property">
+		<![CDATA[
+		SELECT * FROM (SELECT prp_number ,prp_name, prp_address, prp_selltype, prp_termtype, prp_deposit, 
+								prp_monthlycost, prp_leasecost, prp_propertycost, prp_supplyarea, prp_dedicatedarea,
+								prp_maxfloor, prp_floor, prp_type, prp_elevator, prp_parking, prp_moreoption,
+								prp_availabledate, prp_detail, prp_maintenancecost, prp_registerdate, prp_accessibility,sel_id,
+								prp_title, prp_image1, prp_image2, prp_image3, prp_image4, prp_image5, rowNum as rNUM
+		FROM (  SELECT * FROM Property_tbl
+						))
+			WHERE rNUM >= #{start} AND rNUM <= #{end}
+			and sel_id = #{id}
+		]]>
+	</select>
+	
+	
+	<select id="sellerSelectProperty" parameterType="String" resultType="spring.mvc.woorizib.vo.VO_Property">
+		select * from Property_tbl
+		where prp_number = #{saleNum}
+	</select>
+	
+	
+	
+	
+	 <insert id = "insertAuction" parameterType="spring.mvc.woorizib.vo.VO_SellerAuction" >
+		INSERT  
+			INTO auction_tbl(auc_number,auc_name,auc_state, auc_starttime,auc_opendate, auc_paymethod,auc_paydate,auc_minbid,auc_finalbid,prp_number,auc_endtime )
+				VALUES (SEQ_AUCTION.NEXTVAL,#{auc_name},#{auc_state},#{auc_starttime},SYSDATE,#{auc_paymethod},#{auc_paydate},#{auc_minbid},#{auc_finalbid},#{prp_number},#{auc_endtime})	
+	</insert>
+	
+	<select id = "selectAuction" parameterType="String" resultType="spring.mvc.woorizib.vo.VO_SellerAuction">
+		SELECT	auc_number, 	auc_name, 		auc_state,
+				auc_starttime, 	auc_opendate, 	auc_paymethod,
+				auc_paydate, 	auc_minbid, 	auc_finalbid,
+				prp_number, 	auc_endtime 
+			FROM auction_tbl
+				WHERE auc_number = #{auc_number}
+	</select>
+	
+	<update id = "updateAuction" parameterType="spring.mvc.woorizib.vo.VO_SellerAuction" >
+		UPDATE auction_tbl
+			SET auc_name = #{auc_name}, auc_state = #{auc_state},
+				auc_minbid 		= #{auc_minbid}, auc_paymethod 	= #{auc_paymethod},
+				auc_starttime 	= #{auc_starttime},
+				auc_endtime 	= #{auc_endtime},
+				auc_paydate 	= #{auc_paydate}
+					WHERE prp_number = #{prp_number}
+	</update>
+	
+	<!--  박찬하 2020.03.05  -->
+	
+	<select id = "selectAuctionList" resultType="spring.mvc.woorizib.vo.VO_SellerAuction">
+			SELECT 	auc.auc_number,
+			        auc.prp_number, 
+			        auc.auc_name, 
+			        auc.auc_opendate, 
+			        ping.prp_image1     as prp_image
+			    FROM property_tbl ping  JOIN auction_tbl auc
+			        ON auc.prp_number = ping.prp_number
+	</select>
+	
+	<delete id = "auctionDelete" parameterType="String">
+		DELETE FROM auction_tbl
+			WHERE auc_number = #{ auc_number }
+	</delete>
+	
+	 <!-- 박찬하 2020.03.05  -->
+	 
+	 
+	<!-- 매물갯수구하기 -->
+	<select id="getArticleCnt" resultType="int">
+		select COUNT(*) from Property_tbl
+	</select>
+	
+	<!-- 매물수정갯수구하기 (일반) -->
+	<select id="getModifyCnt" resultType="int">
+		select COUNT(*) from Property_tbl
+		where prp_selltype = '일반'
+	</select>
+	
+	<select id="sellerModifySelect" parameterType="java.util.Map" resultType="spring.mvc.woorizib.vo.VO_Property">
+		<![CDATA[
+			SELECT * FROM (SELECT prp_number ,prp_name, prp_address, prp_selltype, prp_termtype, prp_deposit, 
+									prp_monthlycost, prp_leasecost, prp_propertycost, prp_supplyarea, prp_dedicatedarea,
+									prp_maxfloor, prp_floor, prp_type, prp_elevator, prp_parking, prp_moreoption,
+									prp_availabledate, prp_detail, prp_maintenancecost, prp_registerdate, prp_accessibility,sel_id,
+									prp_title, prp_image1, prp_image2, prp_image3, prp_image4, prp_image5, rowNum as rNUM
+			FROM (  SELECT * FROM Property_tbl
+							))
+				WHERE rNUM >= #{start} AND rNUM <= #{end}
+				and prp_selltype = '일반'
+			]]>
+	</select>
+	
+	<select id="sellerModifySelectDate" parameterType="String" resultType="spring.mvc.woorizib.vo.VO_Property">	
+		select prp_number ,prp_name, prp_address, prp_selltype, prp_termtype, prp_deposit, 
+									prp_monthlycost, prp_leasecost, prp_propertycost, prp_supplyarea, prp_dedicatedarea,
+									prp_maxfloor, prp_floor, prp_type, prp_elevator, prp_parking, prp_moreoption,
+									prp_availabledate, prp_detail, prp_maintenancecost, prp_registerdate, prp_accessibility,sel_id,
+									prp_title, prp_image1, prp_image2, prp_image3, prp_image4, prp_image5
+		from Property_tbl
+		where prp_number = #{saleNum}
+	</select>
+	
+	<!-- <update id="sellerModifyPro" parameterType="spring.mvc.woorizib.vo.VO_Property">
+		update Property_tbl 
+		set prp_name = #{prp_name}, 
+		prp_address = #{prp_address}, 
+		prp_selltype = #{prp_selltype}, 
+		prp_termtype = #{prp_termtype}, 
+		prp_deposit = #{prp_deposit}, 
+		prp_monthlycost = #{prp_monthlycost}, 
+		prp_leasecost = #{prp_leasecost}, 
+		prp_propertycost = #{prp_propertycost}, 
+		prp_supplyarea = #{prp_supplyarea}, 
+		prp_dedicatedarea = #{prp_dedicatedarea},
+		prp_maxfloor = #{prp_maxfloor}, 
+		prp_floor = #{prp_floor}, 
+		prp_type = #{prp_type}, 
+		prp_elevator = #{prp_elevator}, 
+		prp_parking = #{prp_parking},
+		 prp_moreoption = #{prp_moreoption},
+		prp_availabledate = #{prp_availabledate},
+		 prp_detail = #{prp_detail}, 
+		 prp_maintenancecost = #{prp_maintenancecost}, 
+		 prp_registerdate = #{prp_registerdate}, 
+		 prp_modifieddate = sysdate, 
+		 prp_accessibility = #{prp_accessibility}, 
+		 sel_id = #{sel_id},
+		prp_title = #{prp_title}, 
+		prp_image1 = #{prp_image1}, 
+		prp_image2 = #{prp_image2}, 
+		prp_image3 = #{prp_image3}, 
+		prp_image4 = #{prp_image4}, 
+		prp_image5 = #{prp_image5}
+		where prp_number = #{prp_number}
+	</update> -->
+	
+	<delete id="sellerPropertyDelete" parameterType="String">
+		delete from Property_tbl
+		where prp_number = #{saleNum}
+	</delete>
+</mapper>  
+    
